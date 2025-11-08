@@ -14,16 +14,22 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private string useActionName = "Use";
     [SerializeField] private string interactActionName = "Interact";
     [SerializeField] private string moveActionName = "Move";
+    [SerializeField] private string attackActionName = "Attack";
+    [SerializeField] private string attackAltActionName = "AttackAlt";
 
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction useAction;
     private InputAction interactAction;
+    private InputAction attackAction;
+    private InputAction attackAltAction;
 
     public Vector2 MoveInput { get; private set; }
     public bool JumpTriggered { get; private set; }
     public bool UseTriggered { get; private set; }
     public bool InteractTriggered { get; private set; }
+    public bool AttackTriggered { get; private set; }
+    public bool AttackAltTriggered { get; private set; }
 
     public static PlayerInputHandler Instance { get; private set; }
 
@@ -45,6 +51,8 @@ public class PlayerInputHandler : MonoBehaviour
         jumpAction = actionMap.FindAction(jumpActionName);
         useAction = actionMap.FindAction(useActionName);
         interactAction = actionMap.FindAction(interactActionName);
+        attackAction = actionMap.FindAction(attackActionName);
+        attackAltAction = actionMap.FindAction(attackAltActionName);
         RegisterInputActions();
     }
 
@@ -61,6 +69,13 @@ public class PlayerInputHandler : MonoBehaviour
         
         useAction.canceled += ctx => UseTriggered = false;
         interactAction.canceled += ctx => InteractTriggered = false;
+
+
+        attackAction.performed += ctx => AttackTriggered = true;
+        attackAction.canceled += ctx => AttackTriggered = false;
+
+        attackAltAction.performed += ctx => AttackAltTriggered = true;
+        attackAltAction.canceled += ctx => AttackAltTriggered = false;
     }
 
     private void OnEnable()
@@ -69,6 +84,8 @@ public class PlayerInputHandler : MonoBehaviour
         jumpAction.Enable();
         useAction.Enable();
         interactAction.Enable();
+        attackAction.Enable();
+        attackAltAction.Enable();
     }
     private void OnDisable()
     {
@@ -76,5 +93,7 @@ public class PlayerInputHandler : MonoBehaviour
         jumpAction.Disable();
         useAction.Disable();
         interactAction.Disable();
+        attackAction.Disable();
+        attackAltAction.Disable();
     }
 }

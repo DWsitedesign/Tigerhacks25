@@ -19,6 +19,8 @@ public class SideScrollerController : MonoBehaviour
     public TriggerHandler currentTrigger;
 
     private PlayerStates playerStates;
+    [SerializeField] private LayerMask enemyLayer;
+    private Vector2 lastMoveInput;
 
     private void Awake()
     {
@@ -31,7 +33,6 @@ public class SideScrollerController : MonoBehaviour
         if (trigger != null)
         {
             currentTrigger = trigger;
-            playerStates.TakeDamage(10);
         }
     }
 
@@ -47,6 +48,10 @@ public class SideScrollerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+        if( moveInput.magnitude !=0)
+        {
+        lastMoveInput = new Vector2(moveInput.x, moveInput.y);
+        }
         // Debug.Log("Move Input: " + moveInput);
     }
     public void OnJump(InputAction.CallbackContext context)
@@ -65,19 +70,25 @@ public class SideScrollerController : MonoBehaviour
             currentTrigger.Interact();
         }
     }
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Debug.Log("Attack Triggered "+ lastMoveInput);
+            if (Physics.SphereCast(transform.position, .5f, new Vector3(lastMoveInput.x, 0, lastMoveInput.y).normalized, out RaycastHit hit, 5, enemyLayer))
+        {
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                Debug.Log("Hit enemy: " + hit.collider.name);
+                // Example: deal damage
+                hit.collider.GetComponent<EnemyController>().takeDamage(10);
+            }
+        }
+        }
+    }
     
     void Update()
     {
-
-        // Vector3 move = new Vector3(moveInput.x, 0, moveInput.y);
-        // velocity.y += gravityScale * Time.deltaTime;
-
-        // if (controller.isGrounded && velocity.y < 0)
-        // {
-        //     velocity.y = -2f; // Small negative value to keep the player grounded
-        // }
-        // controller.Move((move * walkSpeed + Vector3.up * velocity.y) * Time.deltaTime);
-        
         
         // Gravity
         if (controller.isGrounded && velocity.y < 0)
