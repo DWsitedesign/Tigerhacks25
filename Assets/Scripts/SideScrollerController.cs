@@ -16,11 +16,14 @@ public class SideScrollerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 moveInput;
     private Vector3 velocity;
-    private TriggerHandler currentTrigger;
+    public TriggerHandler currentTrigger;
+
+    private PlayerStates playerStates;
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        playerStates = GetComponent<PlayerStates>();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -28,6 +31,7 @@ public class SideScrollerController : MonoBehaviour
         if (trigger != null)
         {
             currentTrigger = trigger;
+            playerStates.TakeDamage(10);
         }
     }
 
