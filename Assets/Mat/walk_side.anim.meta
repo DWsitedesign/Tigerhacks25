@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6b5ba533084243dba76fce27086173cc
+guid: 44ba34d2283b4fa7ad7701b6fb82826e
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 7400000
@@ -12,5 +12,5 @@ AssetOrigin:
   packageName: 2D Character - Astronaut
   packageVersion: 2.0
   assetPath: Assets/COPY SPRIGHT/Comic Battle Royale/2D Character - Astronaut/Variant
-    B/Animations/walk_side.anim
+    A/Animations/walk_side.anim
   uploadId: 624117
