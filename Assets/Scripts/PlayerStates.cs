@@ -24,11 +24,23 @@ public class PlayerStates : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
-        if (health <= 0) {
+        if (health <= 0)
+        {
             health = 0;
             Debug.Log("Player is dead.");
         }
         Debug.Log("Player took " + damage + " damage. Current health: " + health);
-        healthBar.value = health/(float)maxHealth;
+        healthBar.value = health / (float)maxHealth;
+    }
+    
+    public void Heal(int amount)
+    {
+        health += amount;
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+        Debug.Log("Player healed " + amount + " health. Current health: " + health);
+        healthBar.value = health / (float)maxHealth;
     }
 }
