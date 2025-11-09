@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e47e605f2cc54c7ba46324cea4e4a913
+guid: 27d5b60adcca4990b597d9e40303ba71
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 7400000
@@ -12,5 +12,5 @@ AssetOrigin:
   packageName: 2D Character - Astronaut
   packageVersion: 2.0
   assetPath: Assets/COPY SPRIGHT/Comic Battle Royale/2D Character - Astronaut/Variant
-    E/Animations/idle_side.anim
+    A/Animations/idle_side.anim
   uploadId: 624117
