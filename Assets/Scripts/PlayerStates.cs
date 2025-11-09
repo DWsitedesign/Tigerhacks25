@@ -13,6 +13,7 @@ public class PlayerStates : MonoBehaviour
     [Header("Player Money Settings")]
     [SerializeField] private int money = 100;
     [SerializeField] private TextMeshProUGUI moneyText;
+    [SerializeField] private GameObject deathMenu;
 
     private void Start()
     {
@@ -28,6 +29,8 @@ public class PlayerStates : MonoBehaviour
         {
             health = 0;
             Debug.Log("Player is dead.");
+            gameObject.GetComponent<SideScrollerController>().EnableUI();
+            deathMenu.SetActive(true);
         }
         Debug.Log("Player took " + damage + " damage. Current health: " + health);
         healthBar.value = health / (float)maxHealth;
