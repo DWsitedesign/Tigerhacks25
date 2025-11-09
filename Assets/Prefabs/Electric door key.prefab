@@ -75,5 +75,59 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c27cc8c42864686488fa18e26092ccc8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2198312783344710027}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c27cc8c42864686488fa18e26092ccc8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1397225361030585739}
   m_SourcePrefab: {fileID: 100100000, guid: c27cc8c42864686488fa18e26092ccc8, type: 3}
+--- !u!1 &682172382558753082 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c27cc8c42864686488fa18e26092ccc8, type: 3}
+  m_PrefabInstance: {fileID: 411791272617061483}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2198312783344710027
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682172382558753082}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.55, y: 1.7190493, z: 0.14517134}
+  m_Center: {x: -0.011649745, y: -0.7077952, z: -0.024675313}
+--- !u!114 &1397225361030585739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682172382558753082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4647ba8a4a1299409b8d34777f1ea83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TriggerHandler
+  playerTag: Player
+  player: {fileID: 0}
+  messageOnEnter: Entered Trigger
+  type: 5
+  teleportLocation: {fileID: 0}
+  fader: {fileID: 0}
+  messageBox: {fileID: 0}
+  correctCode: 1234
+  unlockCollider: {fileID: 0}
+  codeInputDisplay: {fileID: 0}

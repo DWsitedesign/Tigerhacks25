@@ -1,7 +1,9 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR;
+
 
 public class SideScrollerController : MonoBehaviour
 {
@@ -22,6 +24,7 @@ public class SideScrollerController : MonoBehaviour
     [SerializeField] private LayerMask enemyLayer;
     private Vector2 lastMoveInput;
     [SerializeField] private SelectedItem type;
+    [SerializeField] private PlayerInput playerInput;
 
     public enum SelectedItem
     {
@@ -32,8 +35,38 @@ public class SideScrollerController : MonoBehaviour
 
     private void Awake()
     {
+        playerInput = GetComponent<PlayerInput>();
         controller = GetComponent<CharacterController>();
         playerStates = GetComponent<PlayerStates>();
+        EnablePlayer();
+    }
+
+    public void EnableUI()
+    {
+        if (playerInput == null)
+        {
+            Debug.LogError("PlayerInput is null!");
+            return;
+        }
+        Debug.Log("EnableUI called. Current action map: " + playerInput.currentActionMap.name);
+        playerInput.SwitchCurrentActionMap("UI");
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Debug.Log("Switched to action map: " + playerInput.currentActionMap.name);
+    }
+
+    public void EnablePlayer()
+    {
+        if (playerInput == null)
+        {
+            Debug.LogError("EnablePlayer: PlayerInput is null!");
+            return;
+        }
+        Debug.Log("EnablePlayer called. Current action map: " + playerInput.currentActionMap.name);
+        playerInput.SwitchCurrentActionMap("Gameplay");
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Debug.Log("Switched to action map: " + playerInput.currentActionMap.name);
     }
     private void OnTriggerEnter(Collider other)
     {

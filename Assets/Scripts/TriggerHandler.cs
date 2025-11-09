@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NUnit.Framework;
 using TMPro;
@@ -9,9 +10,12 @@ public class TriggerHandler : MonoBehaviour
     public enum InteractionType
     {
         Door,
+        Locked,
+
         StoryItem,
         Loot,
-        Box
+        Box,
+        Keypad
     }
     [Header("Trigger Settings")]
     [SerializeField] private string playerTag = "Player";
@@ -28,9 +32,20 @@ public class TriggerHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI messageBox;
     private bool isTeleporting = false;
 
+    [Header("Keypad Settings")]
+    [SerializeField] private string correctCode = "1234";
+    [SerializeField] private TriggerHandler unlockCollider;
+    [SerializeField] private GameObject codeInputDisplay;
+    private string currentCodeInput = "";
+
+    [Header("Story Settings")]
+    [SerializeField] private string storyText = "This is a story item.";
+    [SerializeField] private GameObject storyDisplay;
+
     void Awake()
     {
         messageBox = GameObject.FindWithTag("Messagebox").GetComponent<TextMeshProUGUI>();
+        player = GameObject.FindWithTag("Player");
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -64,8 +79,15 @@ public class TriggerHandler : MonoBehaviour
                 StartCoroutine(TeleportPlayer());
                 break;
             case InteractionType.StoryItem:
-                Debug.Log("Interacting with Story");
-                // TODO: trigger story event
+                storyDisplay.SetActive(true);
+                storyDisplay.GetComponentInChildren<TextMeshProUGUI>().text = storyText;
+                storyDisplay.GetComponentInChildren<Button>().onClick.AddListener(() =>
+                {
+                    storyDisplay.SetActive(false);
+                    player.GetComponent<SideScrollerController>().EnablePlayer();
+                });
+                player.GetComponent<SideScrollerController>().EnableUI();
+                messageBox.text = "";
                 break;
             case InteractionType.Loot:
                 Debug.Log("Interacting with Loot");
@@ -75,8 +97,73 @@ public class TriggerHandler : MonoBehaviour
                 Debug.Log("Interacting with Box");
                 // TODO: give box
                 break;
+            case InteractionType.Keypad:
+                OpenKeypad();
+                break;
+            case InteractionType.Locked:
+                Debug.Log("This door is locked.");
+                messageBox.text = "This door is locked.";
+                break;
 
         }
+    }
+
+    private void OpenKeypad()
+    {
+        currentCodeInput = "";
+        codeInputDisplay.SetActive(true);
+        messageBox.text = "";
+        player.GetComponent<SideScrollerController>().EnableUI();
+        // Find all Button components in children
+        Button[] buttons = codeInputDisplay.GetComponentsInChildren<Button>();
+
+        foreach (Button btn in buttons)
+        {
+            btn.onClick.RemoveAllListeners();
+            if (btn.name == "Enter")
+            {
+                // Add listener for Enter button
+                btn.onClick.AddListener(() =>
+                {
+                    if (currentCodeInput == correctCode)
+                    {
+                        Debug.Log("Correct code entered!");
+                        messageBox.text = "Code Correct! Door Unlocked.";
+                        unlockCollider.GetComponent<TriggerHandler>().type = InteractionType.Door;
+                    }
+                    else
+                    {
+                        Debug.Log("Incorrect code.");
+                        messageBox.text = "Incorrect Code. Try Again.";
+                    }
+                    // Close keypad
+                    codeInputDisplay.SetActive(false);
+                    player.GetComponent<SideScrollerController>().EnablePlayer();
+                });
+                continue;
+            }
+            else if (btn.name == "Cancel")
+            {
+                // Add listener for Clear button
+                btn.onClick.AddListener(() =>
+                {
+                    currentCodeInput = "";
+                    codeInputDisplay.SetActive(false);
+                    player.GetComponent<SideScrollerController>().EnablePlayer();
+                });
+                continue;
+            }
+            else
+            {
+                btn.onClick.AddListener(() => InputCharacter(btn.name));
+            }
+
+        }
+    }
+    public void InputCharacter(String Letter)
+    {
+        currentCodeInput += Letter;
+        Debug.Log("Current Code Input: " + currentCodeInput);
     }
 
     private IEnumerator TeleportPlayer()
