@@ -15,7 +15,7 @@ public class PlayerStates : MonoBehaviour
     [SerializeField] private TextMeshProUGUI moneyText;
     [SerializeField] private GameObject deathMenu;
     [SerializeField] private int ammo = 0;
-    [SerializeField] private int healthPotion = 0;
+    [SerializeField] private int healthPotion = 10;
     [SerializeField] private TextMeshProUGUI healthPotionUI;
     [SerializeField] private TextMeshProUGUI ammoUI;
 
