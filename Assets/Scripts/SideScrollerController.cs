@@ -21,6 +21,14 @@ public class SideScrollerController : MonoBehaviour
     private PlayerStates playerStates;
     [SerializeField] private LayerMask enemyLayer;
     private Vector2 lastMoveInput;
+    [SerializeField] private SelectedItem type;
+
+    public enum SelectedItem
+    {
+        healthPotion,
+        gun,
+        meleeWeapon
+    }
 
     private void Awake()
     {
@@ -33,6 +41,22 @@ public class SideScrollerController : MonoBehaviour
         if (trigger != null)
         {
             currentTrigger = trigger;
+        }
+        if (other.CompareTag("Enemy"))
+        {
+            Debug.Log("Collided with enemy: " + other.name);
+            // Example: take damage
+            playerStates.TakeDamage(10);
+        }
+        if (other.CompareTag("HealthPickup"))
+        {
+            playerStates.Heal(5);
+            Destroy(other.gameObject);
+        }
+        if (other.CompareTag("AmmoPickup"))
+        {
+            // Example: add money
+            Destroy(other.gameObject);
         }
     }
 
@@ -48,9 +72,9 @@ public class SideScrollerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
-        if( moveInput.magnitude !=0)
+        if (moveInput.magnitude != 0)
         {
-        lastMoveInput = new Vector2(moveInput.x, moveInput.y);
+            lastMoveInput = new Vector2(moveInput.x, moveInput.y);
         }
         // Debug.Log("Move Input: " + moveInput);
     }
@@ -74,22 +98,35 @@ public class SideScrollerController : MonoBehaviour
     {
         if (context.performed)
         {
-            Debug.Log("Attack Triggered "+ lastMoveInput);
-            if (Physics.SphereCast(transform.position, .5f, new Vector3(lastMoveInput.x, 0, lastMoveInput.y).normalized, out RaycastHit hit, 5, enemyLayer))
-        {
-            if (hit.collider.CompareTag("Enemy"))
+            Vector3 direction = new Vector3(lastMoveInput.x, 0, lastMoveInput.y).normalized;
+            Debug.DrawRay(transform.position, direction * (5), Color.blue, 2f);
+            switch (type)
             {
-                Debug.Log("Hit enemy: " + hit.collider.name);
-                // Example: deal damage
-                hit.collider.GetComponent<EnemyController>().takeDamage(10);
+                case SelectedItem.healthPotion:
+                    Debug.Log("Use Health Potion");
+                    playerStates.Heal(20);
+                    break;
+                case SelectedItem.gun:
+                    Debug.Log("Shoot Gun");
+                    break;
+                case SelectedItem.meleeWeapon:
+                    if (Physics.SphereCast(transform.position, .5f, direction, out RaycastHit hit, 5, enemyLayer))
+                    {
+                        if (hit.collider.CompareTag("Enemy"))
+                        {
+                            Debug.Log("Hit enemy: " + hit.collider.name);
+                            // Example: deal damage
+                            hit.collider.GetComponent<EnemyController>().takeDamage(10);
+                        }
+                    }
+                    break;
             }
         }
-        }
     }
-    
+
     void Update()
     {
-        
+
         // Gravity
         if (controller.isGrounded && velocity.y < 0)
             velocity.y = -2f;
