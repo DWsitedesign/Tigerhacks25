@@ -3,10 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
@@ -37,6 +33,10 @@ public class SceneLoader : MonoBehaviour
         {
             SceneManager.LoadScene(0);
         }
+    }
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene(0);
     }
     public void StartGame()
     {

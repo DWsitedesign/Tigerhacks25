@@ -25,6 +25,7 @@ public class SideScrollerController : MonoBehaviour
     private Vector2 lastMoveInput;
     [SerializeField] private SelectedItem type;
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private GameObject pauseMenu;
 
     public enum SelectedItem
     {
@@ -32,6 +33,7 @@ public class SideScrollerController : MonoBehaviour
         gun,
         meleeWeapon
     }
+    private float lastAttack = 2f;
 
     private void Awake()
     {
@@ -93,6 +95,12 @@ public class SideScrollerController : MonoBehaviour
         }
     }
 
+    public void OnPause(InputAction.CallbackContext context){
+        if (!context.performed) return;
+        EnableUI();
+        pauseMenu.SetActive(true);
+    }
+
     private void OnTriggerExit(Collider other)
     {
         var trigger = other.GetComponent<TriggerHandler>();
@@ -108,6 +116,9 @@ public class SideScrollerController : MonoBehaviour
         if (moveInput.magnitude != 0)
         {
             lastMoveInput = new Vector2(moveInput.x, moveInput.y);
+        GameObject.Find("PlayerCharacter").GetComponent<Animator>().SetBool("IsRunning", true);
+        } else{
+            GameObject.Find("PlayerCharacter").GetComponent<Animator>().SetBool("IsRunning", false);
         }
         // Debug.Log("Move Input: " + moveInput);
     }
@@ -143,14 +154,20 @@ public class SideScrollerController : MonoBehaviour
                     Debug.Log("Shoot Gun");
                     break;
                 case SelectedItem.meleeWeapon:
-                    if (Physics.SphereCast(transform.position, .5f, direction, out RaycastHit hit, 5, enemyLayer))
+                    if (Time.time - lastAttack >= 1f)
                     {
-                        if (hit.collider.CompareTag("Enemy"))
+                        
+                        GameObject.Find("Wrenchhandler").GetComponentInChildren<Animation>().Play("pipewrench");
+                        if (Physics.SphereCast(transform.position, .5f, direction, out RaycastHit hit, 5, enemyLayer))
                         {
-                            Debug.Log("Hit enemy: " + hit.collider.name);
-                            // Example: deal damage
-                            hit.collider.GetComponent<EnemyController>().takeDamage(10);
+                            if (hit.collider.CompareTag("Enemy"))
+                            {
+                                Debug.Log("Hit enemy: " + hit.collider.name);
+                                // Example: deal damage
+                                hit.collider.GetComponent<EnemyController>().takeDamage(10);
+                            }
                         }
+                        lastAttack = Time.time;
                     }
                     break;
             }
@@ -167,6 +184,14 @@ public class SideScrollerController : MonoBehaviour
             velocity.y += gravityScale * Time.deltaTime;
 
         // Horizontal move only (side-scroller)
+        if (lastMoveInput.x >= 0)
+        {
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        }
         Vector3 move = new Vector3(moveInput.x * walkSpeed, velocity.y, moveInput.y * walkSpeed);
 
         // Move once per frame

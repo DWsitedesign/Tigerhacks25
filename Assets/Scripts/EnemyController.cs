@@ -99,7 +99,7 @@ public class EnemyController : MonoBehaviour
             // Raycast to detect player
             if (Physics.Raycast(transform.position, direction, out RaycastHit hit, detectionRange, playerLayer))
             {
-                Debug.Log("Player detected at angle " + angle + ": " + hit.collider.name);
+                // Debug.Log("Player detected at angle " + angle + ": " + hit.collider.name);
                 // TODO: attack logic
                 playerTarget = hit.transform;
                 lastKnownPlayerPos = playerTarget.position;
@@ -117,7 +117,7 @@ public class EnemyController : MonoBehaviour
             timeSinceLastSeen = 0f;
 
 
-            Debug.Log("Player within close detection radius: " + playerTarget.name);
+            // Debug.Log("Player within close detection radius: " + playerTarget.name);
             return;
         }
 
