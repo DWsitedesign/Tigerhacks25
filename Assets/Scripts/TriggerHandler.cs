@@ -185,6 +185,7 @@ public class TriggerHandler : MonoBehaviour
         {
             player.transform.position = teleportLocation.position;
         }
+        GameObject.Find("Rooms").GetComponent<RoomManager>().CheckRooms();
         GameObject.FindWithTag("MainCamera").GetComponent<CameraFollow>().CheckWall();
         messageBox.text = "";
         playerInside = false;
