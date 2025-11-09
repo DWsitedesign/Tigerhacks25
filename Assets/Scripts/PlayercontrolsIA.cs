@@ -154,6 +154,33 @@ public partial class @PlayercontrolsIA: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HealthPotions"",
+                    ""type"": ""Button"",
+                    ""id"": ""720f860c-eb7b-4188-ac08-e047f2542d01"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Wrench"",
+                    ""type"": ""Button"",
+                    ""id"": ""0888c62a-947e-4ef1-965f-a707974459c8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Gun"",
+                    ""type"": ""Button"",
+                    ""id"": ""6c5a8f1d-6712-4cbf-8466-0f75315024cd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -288,6 +315,39 @@ public partial class @PlayercontrolsIA: IInputActionCollection2, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5940041c-723f-4c89-9703-ec9008b2c6c2"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HealthPotions"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dca1d77c-1ae8-4392-be5a-d6f026603ee7"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Wrench"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e11ec106-b8aa-452e-bbc0-4a7eefef98db"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Gun"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -351,6 +411,9 @@ public partial class @PlayercontrolsIA: IInputActionCollection2, IDisposable
         m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
         m_Gameplay_AttackAlt = m_Gameplay.FindAction("AttackAlt", throwIfNotFound: true);
         m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
+        m_Gameplay_HealthPotions = m_Gameplay.FindAction("HealthPotions", throwIfNotFound: true);
+        m_Gameplay_Wrench = m_Gameplay.FindAction("Wrench", throwIfNotFound: true);
+        m_Gameplay_Gun = m_Gameplay.FindAction("Gun", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
@@ -443,6 +506,9 @@ public partial class @PlayercontrolsIA: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Attack;
     private readonly InputAction m_Gameplay_AttackAlt;
     private readonly InputAction m_Gameplay_Pause;
+    private readonly InputAction m_Gameplay_HealthPotions;
+    private readonly InputAction m_Gameplay_Wrench;
+    private readonly InputAction m_Gameplay_Gun;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -482,6 +548,18 @@ public partial class @PlayercontrolsIA: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Pause".
         /// </summary>
         public InputAction @Pause => m_Wrapper.m_Gameplay_Pause;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/HealthPotions".
+        /// </summary>
+        public InputAction @HealthPotions => m_Wrapper.m_Gameplay_HealthPotions;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Wrench".
+        /// </summary>
+        public InputAction @Wrench => m_Wrapper.m_Gameplay_Wrench;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Gun".
+        /// </summary>
+        public InputAction @Gun => m_Wrapper.m_Gameplay_Gun;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -529,6 +607,15 @@ public partial class @PlayercontrolsIA: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @HealthPotions.started += instance.OnHealthPotions;
+            @HealthPotions.performed += instance.OnHealthPotions;
+            @HealthPotions.canceled += instance.OnHealthPotions;
+            @Wrench.started += instance.OnWrench;
+            @Wrench.performed += instance.OnWrench;
+            @Wrench.canceled += instance.OnWrench;
+            @Gun.started += instance.OnGun;
+            @Gun.performed += instance.OnGun;
+            @Gun.canceled += instance.OnGun;
         }
 
         /// <summary>
@@ -561,6 +648,15 @@ public partial class @PlayercontrolsIA: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @HealthPotions.started -= instance.OnHealthPotions;
+            @HealthPotions.performed -= instance.OnHealthPotions;
+            @HealthPotions.canceled -= instance.OnHealthPotions;
+            @Wrench.started -= instance.OnWrench;
+            @Wrench.performed -= instance.OnWrench;
+            @Wrench.canceled -= instance.OnWrench;
+            @Gun.started -= instance.OnGun;
+            @Gun.performed -= instance.OnGun;
+            @Gun.canceled -= instance.OnGun;
         }
 
         /// <summary>
@@ -757,6 +853,27 @@ public partial class @PlayercontrolsIA: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPause(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "HealthPotions" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHealthPotions(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Wrench" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnWrench(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Gun" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGun(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
