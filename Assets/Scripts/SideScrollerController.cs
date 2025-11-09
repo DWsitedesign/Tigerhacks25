@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -26,6 +27,9 @@ public class SideScrollerController : MonoBehaviour
     [SerializeField] private SelectedItem type;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private GameObject pauseMenu;
+    private Transform healthItem;
+    private Transform gun;
+    private Transform meleeWeapon;
 
     public enum SelectedItem
     {
@@ -40,6 +44,12 @@ public class SideScrollerController : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         controller = GetComponent<CharacterController>();
         playerStates = GetComponent<PlayerStates>();
+        healthItem = transform.Find("prescription_pill_bottle");
+        gun = transform.Find("gun_m4a1");
+        meleeWeapon = transform.Find("Wrenchhandler");
+        healthItem.gameObject.SetActive(type == SelectedItem.healthPotion);
+        gun.gameObject.SetActive(type == SelectedItem.gun);
+        meleeWeapon.gameObject.SetActive(type == SelectedItem.meleeWeapon);
         EnablePlayer();
     }
 
@@ -90,7 +100,7 @@ public class SideScrollerController : MonoBehaviour
         }
         if (other.CompareTag("AmmoPickup"))
         {
-            // Example: add money
+            playerStates.PickUpAmmo(10);
             Destroy(other.gameObject);
         }
     }
@@ -138,6 +148,34 @@ public class SideScrollerController : MonoBehaviour
             currentTrigger.Interact();
         }
     }
+    public void SelectShortcut(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        string item = context.control.name;
+        Debug.Log("Selecting shortcut: " + item);
+    
+        switch (item)
+        {
+            case "1":
+                type = SelectedItem.healthPotion;
+                Debug.Log("Selected Health Potion");
+                break;
+            case "3":
+                type = SelectedItem.gun;
+                Debug.Log("Selected Gun");
+                break;
+            case "2":
+                type = SelectedItem.meleeWeapon;
+                Debug.Log("Selected Melee Weapon");
+                break;
+            default:
+                Debug.LogWarning("Unknown item selected: " + item);
+                break;
+        }
+        healthItem.gameObject.SetActive(type == SelectedItem.healthPotion);
+        gun.gameObject.SetActive(type == SelectedItem.gun);
+        meleeWeapon.gameObject.SetActive(type == SelectedItem.meleeWeapon);
+    }
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -148,10 +186,26 @@ public class SideScrollerController : MonoBehaviour
             {
                 case SelectedItem.healthPotion:
                     Debug.Log("Use Health Potion");
-                    playerStates.Heal(20);
+                    playerStates.UseHealthPotion(1);
                     break;
                 case SelectedItem.gun:
-                    Debug.Log("Shoot Gun");
+                    if (playerStates.UseAmmo(1))
+                    {
+                        Debug.Log("Fired Gun");
+                        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, 50, enemyLayer))
+                        {
+                            if (hit.collider.CompareTag("Enemy"))
+                            {
+                                Debug.Log("Hit enemy: " + hit.collider.name);
+                                // Example: deal damage
+                                hit.collider.GetComponent<EnemyController>().takeDamage(20);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("No ammo to fire!");
+                    }
                     break;
                 case SelectedItem.meleeWeapon:
                     if (Time.time - lastAttack >= 1f)
